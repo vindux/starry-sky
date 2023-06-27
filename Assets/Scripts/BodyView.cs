@@ -1,19 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
+using UnityEditor;
 using Kinect = Windows.Kinect;
 
 public class BodyView : MonoBehaviour {
 	// public float scaleFactorAll = 10;
 	public float ceilingSizeX = 5;
 	public float ceilingSizeY = 2.8125f;
-
-	public float minDistance = 0.75f;
-
-
+	public float minDistance = 1.00f;
+	
 	private const float CamSizeX = 17.77568f;
 	private const float CamSizeY = 5.0f;
-
+	private TextMeshPro _textMeshPro;
 
 	public BodyManager bodyManager;
 	public GameObject jointObject;
@@ -25,15 +25,16 @@ public class BodyView : MonoBehaviour {
 		Kinect.JointType.Head
 	};
 
-	private bool _isbodyManagerNull;
+	private bool _isBodyManagerNull;
 
 	private void Start() {
 		Debug.Log("starting bodyview");
-		_isbodyManagerNull = bodyManager == null;
+		_isBodyManagerNull = bodyManager == null;
+		_textMeshPro = GetComponentInChildren<TextMeshPro>();
 	}
 
 	private void Update() {
-		if (_isbodyManagerNull) return;
+		if (_isBodyManagerNull) return;
 
 		var data = bodyManager.GetData();
 		if (data == null) {
@@ -47,7 +48,6 @@ public class BodyView : MonoBehaviour {
 			var knownIds = _bodies.Select(body => body.ID).ToList();
 
 			// delete untracked bodies
-
 			foreach (var trackingId in knownIds.Where(trackingId => !trackedIds.Contains(trackingId))) {
 				foreach (var body in _bodies.Where(body => body.IdMatches(trackingId))) {
 					Destroy(body.GameObject);
@@ -68,13 +68,17 @@ public class BodyView : MonoBehaviour {
 			}
 		}
 
-		if (Input.GetKeyDown(KeyCode.Space)) {
-			var num = (ulong)Random.Range(100, 10000000);
-			_bodies.Add(CreateBodyObject(num));
-		}
+		CheckKeyInput();
+		VisualizeClusters();
+	}
 
-		var clusters = BodyComparer.GetCloseGroups(_bodies);
+	private void VisualizeClusters() {
+		var clusters = BodyComparer.GetCloseGroups(_bodies, minDistance);
 		// Debug.Log("Cluster size = " + clusters.Count);
+		if (_textMeshPro != null) {
+			var text = "\nBodies = " + _bodies.Count + "\nClusters = " + clusters.Count;
+			_textMeshPro.text = text;
+		}
 
 		for (var index = 0; index < clusters.Count; index++) {
 			// Debug.Log("cluster [" + index + "] size = " + cluster.ClusterMembers.Count);
@@ -85,16 +89,25 @@ public class BodyView : MonoBehaviour {
 				foreach (var body2 in bodies.Where(body => body1 != body)) {
 					var start = body1.GameObject.transform.position;
 					var end = body2.GameObject.transform.position;
-
-					// Debug.Log(start + "  TO  " + end);
 					Debug.DrawLine(start, end, Color.red, Time.deltaTime, false);
 				}
 			}
 		}
 	}
 
-	private BodyObject CreateBodyObject(ulong id) {
-		var body = new GameObject("body=" + id);
+	private void CheckKeyInput() {
+		if (Input.GetKeyDown(KeyCode.Space)) {
+			var num = (ulong) Random.Range(10000000, 99999999);
+			_bodies.Add(CreateBodyObject(num));
+		}
+	}
+
+	private BodyObject CreateBodyObject(ulong id, float x = 0, float y = 0) {
+		var body = new GameObject("body=" + id) {
+			transform = {
+				position = new Vector3(x, y, 0)
+			}
+		};
 
 		var jointObj = Instantiate(jointObject);
 		foreach (var joint in _joints) {

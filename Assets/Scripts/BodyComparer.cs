@@ -3,9 +3,7 @@ using System.Linq;
 using UnityEngine;
 
 public class BodyComparer : MonoBehaviour {
-	private const float MinDistance = 1.0f;
-
-	public static List<Cluster> GetCloseGroups(List<BodyObject> bodies) {
+	public static List<Cluster> GetCloseGroups(List<BodyObject> bodies, float  minDistance) {
 		var closeGroups = new List<Cluster>();
 
 		foreach (var body1 in bodies) {
@@ -20,19 +18,14 @@ public class BodyComparer : MonoBehaviour {
 				currentCluster = existingCluster;
 			}
 
-			foreach (var body2 in bodies) {
-				if (body1 == body2)
-					continue;
-
-				if (Vector3.Distance(body1.GameObject.transform.position, body2.GameObject.transform.position) <=
-				    MinDistance) {
+			foreach (var body2 in bodies.Where(body2 => body1 != body2)) {
+				if (Vector3.Distance(body1.GameObject.transform.position, body2.GameObject.transform.position) <= minDistance) {
 					var existingCluster2 = closeGroups.FirstOrDefault(cluster => cluster.IsMember(body2.ID));
 
 					if (existingCluster2 != null && currentCluster != existingCluster2) {
 						foreach (var member in existingCluster2.ClusterMembers) {
 							currentCluster.AddClusterMember(member);
 						}
-
 						closeGroups.Remove(existingCluster2);
 					}
 
@@ -42,7 +35,7 @@ public class BodyComparer : MonoBehaviour {
 				}
 			}
 		}
-
+		closeGroups.RemoveAll(cluster => cluster.ClusterMembers.Count == 1);
 		return closeGroups;
 	}
 }
