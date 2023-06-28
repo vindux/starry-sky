@@ -17,6 +17,22 @@ public class Cluster {
 		ClusterMembers.Remove(bodyObject);
 	}
 
+	// public void SpawnClusterObject(ulong id, GameObject newObjectPrefab) {
+	// 	var clusterCenter = Vector3.zero;
+	// 	foreach (var member in ClusterMembers) {
+	// 		clusterCenter += member.GameObject.transform.position;
+	// 		// Destroy the individual cluster member GameObjects
+	// 		Destroy(member.GameObject);
+	// 	}
+	// 	clusterCenter /= ClusterMembers.Count;
+	// 	
+	// 	var newObject = Instantiate(newObjectPrefab, clusterCenter, Quaternion.identity);
+	//
+	// 	ClusterMembers.Clear();
+	// 	ClusterMembers.Add(new BodyObject(id, newObject));
+	// }
+
+
 	public bool IsMember(ulong id) {
 		return ClusterMembers.Any(clusterMember => clusterMember.IdMatches(id));
 	}
