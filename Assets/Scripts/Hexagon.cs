@@ -11,14 +11,11 @@ public class Hexagon : MonoBehaviour {
 	public float moveSpeed = 1.0f;
 	private Vector3 _targetPosition;
 
-	// Start is called before the first frame update
 	private void Start() {
-		var parent = transform.parent;
-		if (parent == null || moveSpeed == 0.0f) return;
+		if (transform.parent == null || moveSpeed == 0.0f) return;
 		_targetPosition = GetRandomPosition();
 	}
 
-	// Update is called once per frame
 	private void Update() {
 		var parent = transform.parent;
 		if (parent == null || moveSpeed == 0.0f) return;

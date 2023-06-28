@@ -35,7 +35,7 @@ public class BodyComparer : MonoBehaviour {
 				}
 			}
 		}
-		closeGroups.RemoveAll(cluster => cluster.ClusterMembers.Count == 1);
+		closeGroups.RemoveAll(cluster => cluster.Size() == 1);
 		return closeGroups;
 	}
 }

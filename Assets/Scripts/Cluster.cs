@@ -20,4 +20,8 @@ public class Cluster {
 	public bool IsMember(ulong id) {
 		return ClusterMembers.Any(clusterMember => clusterMember.IdMatches(id));
 	}
+
+	public int Size() {
+		return ClusterMembers.Count;
+	}
 }

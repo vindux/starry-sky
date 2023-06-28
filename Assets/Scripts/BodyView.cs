@@ -28,7 +28,6 @@ public class BodyView : MonoBehaviour {
 	private bool _isBodyManagerNull;
 
 	private void Start() {
-		Debug.Log("starting bodyview");
 		_isBodyManagerNull = bodyManager == null;
 		_textMeshPro = GetComponentInChildren<TextMeshPro>();
 	}
@@ -71,7 +70,14 @@ public class BodyView : MonoBehaviour {
 		CheckKeyInput();
 		VisualizeClusters();
 	}
-
+	
+	private void CheckKeyInput() {
+		if (!Input.GetKeyDown(KeyCode.Space)) return;
+		
+		var num = (ulong) Random.Range(10000000, 99999999);
+		_bodies.Add(CreateBodyObject(num));
+	}
+	
 	private void VisualizeClusters() {
 		var clusters = BodyComparer.GetCloseGroups(_bodies, minDistance);
 		// Debug.Log("Cluster size = " + clusters.Count);
@@ -81,7 +87,7 @@ public class BodyView : MonoBehaviour {
 		}
 
 		for (var index = 0; index < clusters.Count; index++) {
-			// Debug.Log("cluster [" + index + "] size = " + cluster.ClusterMembers.Count);
+			// Debug.Log("cluster [" + index + "] size = " + cluster.Size());
 			var cluster = clusters[index];
 			var bodies = cluster.ClusterMembers;
 
@@ -92,13 +98,6 @@ public class BodyView : MonoBehaviour {
 					Debug.DrawLine(start, end, Color.red, Time.deltaTime, false);
 				}
 			}
-		}
-	}
-
-	private void CheckKeyInput() {
-		if (Input.GetKeyDown(KeyCode.Space)) {
-			var num = (ulong) Random.Range(10000000, 99999999);
-			_bodies.Add(CreateBodyObject(num));
 		}
 	}
 
