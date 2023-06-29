@@ -4,35 +4,33 @@ using UnityEngine;
 
 public class Cluster {
 	public List<BodyObject> ClusterMembers { get; } = new();
+	private Vector3 Center { get; set; }
 
 	public Cluster(BodyObject bodyObject) {
 		ClusterMembers.Add(bodyObject);
+		UpdateCenter();
 	}
 
 	public void AddClusterMember(BodyObject bodyObject) {
 		ClusterMembers.Add(bodyObject);
+		UpdateCenter();
 	}
 
-	public void RemoveClusterMember(BodyObject bodyObject) {
-		ClusterMembers.Remove(bodyObject);
+	private void UpdateCenter() {
+		var sum = ClusterMembers.Aggregate(Vector3.zero, (current, member) => current + member.GameObject.transform.position);
+
+		Center = sum / ClusterMembers.Count;
 	}
 
-	// public void SpawnClusterObject(ulong id, GameObject newObjectPrefab) {
-	// 	var clusterCenter = Vector3.zero;
-	// 	foreach (var member in ClusterMembers) {
-	// 		clusterCenter += member.GameObject.transform.position;
-	// 		// Destroy the individual cluster member GameObjects
-	// 		Destroy(member.GameObject);
-	// 	}
-	// 	clusterCenter /= ClusterMembers.Count;
-	// 	
-	// 	var newObject = Instantiate(newObjectPrefab, clusterCenter, Quaternion.identity);
-	//
-	// 	ClusterMembers.Clear();
-	// 	ClusterMembers.Add(new BodyObject(id, newObject));
-	// }
+	public void AddClusterObject(GameObject newObjectPrefab) {
+		foreach (var child in ClusterMembers.SelectMany(member => member.GetAllChildren())) {
+			Object.Destroy(child);
+		}
 
-
+		// Spawn new object at the center of the cluster
+		Object.Instantiate(newObjectPrefab, Center, Quaternion.identity);
+	}
+	
 	public bool IsMember(ulong id) {
 		return ClusterMembers.Any(clusterMember => clusterMember.IdMatches(id));
 	}

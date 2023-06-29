@@ -1,10 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BodyComparer : MonoBehaviour {
-	public static List<Cluster> GetCloseGroups(List<BodyObject> bodies, float  minDistance) {
+	public static List<Cluster> GetCloseGroups(List<BodyObject> bodies, float minDistance, GameObject clusterPrefab) {
 		var closeGroups = new List<Cluster>();
+
+		var clusterObjects = FindObjectsOfType<GameObject>()
+			.Where(go => go.name.Contains("Cluster"))
+			.ToArray();
+		foreach (var cluster in clusterObjects) {
+			Destroy(cluster);
+		}
 
 		foreach (var body1 in bodies) {
 			var existingCluster = closeGroups.FirstOrDefault(cluster => cluster.IsMember(body1.ID));
@@ -26,6 +34,7 @@ public class BodyComparer : MonoBehaviour {
 						foreach (var member in existingCluster2.ClusterMembers) {
 							currentCluster.AddClusterMember(member);
 						}
+
 						closeGroups.Remove(existingCluster2);
 					}
 
@@ -35,7 +44,19 @@ public class BodyComparer : MonoBehaviour {
 				}
 			}
 		}
-		closeGroups.RemoveAll(cluster => cluster.Size() == 1);
+
+		foreach (var cluster in closeGroups) {
+			if (cluster.Size() == 1) {
+				foreach (var member in cluster.ClusterMembers.Where(member => member.GetChildCount() == 0)) {
+					member.InstantiateChild();
+				}
+			}
+			else {
+				cluster.AddClusterObject(clusterPrefab);
+			}
+		}
+
+		var removed = closeGroups.RemoveAll(cluster => cluster.Size() == 1);
 		return closeGroups;
 	}
 }

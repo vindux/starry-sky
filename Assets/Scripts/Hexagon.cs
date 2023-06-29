@@ -8,20 +8,19 @@ public class Hexagon : MonoBehaviour {
 	private const float MaxX = 8.5f;
 	private const float MinY = -4.5f;
 	private const float MaxY = 4.5f;
-	public float moveSpeed = 1.0f;
+	public float moveSpeed = 0.35f;
 	private Vector3 _targetPosition;
 
 	private void Start() {
-		if (transform.parent == null || moveSpeed == 0.0f) return;
+		if (moveSpeed == 0.0f) return;
 		_targetPosition = GetRandomPosition();
 	}
 
 	private void Update() {
-		var parent = transform.parent;
-		if (parent == null || moveSpeed == 0.0f) return;
-		parent.position = Vector3.MoveTowards(parent.position, _targetPosition, moveSpeed * Time.deltaTime);
+		if ( moveSpeed == 0.0f) return;
+		transform.position = Vector3.MoveTowards(transform.position, _targetPosition, moveSpeed * Time.deltaTime);
 
-		if (transform.parent.position == _targetPosition) {
+		if (transform.position == _targetPosition) {
 			_targetPosition = GetRandomPosition();
 		}
 	}
@@ -29,6 +28,6 @@ public class Hexagon : MonoBehaviour {
 	private Vector3 GetRandomPosition() {
 		var randomX = Random.Range(Minx, MaxX);
 		var randomY = Random.Range(MinY, MaxY);
-		return new Vector3(randomX, randomY, transform.parent.position.z);
+		return new Vector3(randomX, randomY, transform.position.z);
 	}
 }

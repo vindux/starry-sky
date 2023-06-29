@@ -16,7 +16,8 @@ public class BodyView : MonoBehaviour {
 	private TextMeshPro _textMeshPro;
 
 	public BodyManager bodyManager;
-	public GameObject jointObject;
+	public GameObject clusterPrefab;
+	public GameObject bodyPrefab;
 
 	// private readonly Dictionary<ulong, GameObject> _bodies = new();
 	private readonly List<BodyObject> _bodies = new();
@@ -79,7 +80,7 @@ public class BodyView : MonoBehaviour {
 	}
 	
 	private void VisualizeClusters() {
-		var clusters = BodyComparer.GetCloseGroups(_bodies, minDistance);
+		var clusters = BodyComparer.GetCloseGroups(_bodies, minDistance, clusterPrefab);
 		// Debug.Log("Cluster size = " + clusters.Count);
 		if (_textMeshPro != null) {
 			var text = "\nBodies = " + _bodies.Count + "\nClusters = " + clusters.Count;
@@ -108,13 +109,7 @@ public class BodyView : MonoBehaviour {
 			}
 		};
 
-		var jointObj = Instantiate(jointObject);
-		foreach (var joint in _joints) {
-			jointObj.name = joint.ToString();
-			jointObj.transform.parent = body.transform;
-		}
-
-		return new BodyObject(id, body);
+		return new BodyObject(id, body, bodyPrefab);
 	}
 
 	private void RefreshBodyObject(Kinect.Body body, BodyObject bodyObject) {
