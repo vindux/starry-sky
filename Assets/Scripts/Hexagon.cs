@@ -15,7 +15,7 @@ public class Hexagon : MonoBehaviour {
 		if (moveSpeed == 0.0f) return;
 		_targetPosition = GetRandomPosition();
 	}
-
+ 
 	private void Update() {
 		if ( moveSpeed == 0.0f) return;
 		transform.position = Vector3.MoveTowards(transform.position, _targetPosition, moveSpeed * Time.deltaTime);
