@@ -46,7 +46,7 @@ ParticleSystemForceField:
     m_StartRange: 1.5
     m_EndRange: 3
     m_Length: 1
-    m_GravityFocus: 0
+    m_GravityFocus: 0.2
     m_RotationRandomness: {x: 0, y: 0}
     m_DirectionCurveX:
       serializedVersion: 2
@@ -211,7 +211,7 @@ ParticleSystemForceField:
       serializedVersion: 2
       minMaxState: 3
       scalar: 10
-      minScalar: 4
+      minScalar: 0
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -263,7 +263,7 @@ ParticleSystemForceField:
     m_RotationSpeedCurve:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 5
+      scalar: 0
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -316,7 +316,7 @@ ParticleSystemForceField:
     m_RotationAttractionCurve:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.52
+      scalar: 1
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -535,7 +535,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 42177510066977988}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8b7c1505c4dbfb54bbf72f228a8b5b0d, type: 3}
   m_Name: 

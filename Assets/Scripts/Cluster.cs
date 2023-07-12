@@ -17,7 +17,8 @@ public class Cluster {
 	}
 
 	private void UpdateCenter() {
-		var sum = ClusterMembers.Aggregate(Vector3.zero, (current, member) => current + member.GameObject.transform.position);
+		var sum = ClusterMembers.Aggregate(Vector3.zero,
+			(current, member) => current + member.GameObject.transform.position);
 
 		Center = sum / ClusterMembers.Count;
 	}
@@ -28,9 +29,11 @@ public class Cluster {
 		}
 
 		// Spawn new object at the center of the cluster
-		Object.Instantiate(newObjectPrefab, Center, Quaternion.identity);
+		var cluster = Object.Instantiate(newObjectPrefab, Center, Quaternion.identity);
+		var num = (ulong)Random.Range(10000000, 99999999);
+		cluster.name = "Cluster=" + num;
 	}
-	
+
 	public bool IsMember(ulong id) {
 		return ClusterMembers.Any(clusterMember => clusterMember.IdMatches(id));
 	}
