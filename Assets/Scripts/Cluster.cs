@@ -25,7 +25,7 @@ public class Cluster {
 
 	public void AddClusterObject(GameObject newObjectPrefab) {
 		foreach (var child in ClusterMembers.SelectMany(member => member.GetAllChildren())) {
-			Object.Destroy(child);
+			child.SetActive(false);
 		}
 
 		// Spawn new object at the center of the cluster

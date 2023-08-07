@@ -47,8 +47,10 @@ public class BodyComparer : MonoBehaviour {
 
 		foreach (var cluster in closeGroups) {
 			if (cluster.Size() == 1) {
-				foreach (var member in cluster.ClusterMembers.Where(member => member.GetChildCount() == 0)) {
-					member.InstantiateChild();
+				foreach (var member in cluster.ClusterMembers) {
+					foreach (var child in member.GetAllChildren()) {
+						child.SetActive(true);
+					}
 				}
 			}
 			else {
