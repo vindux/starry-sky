@@ -16,7 +16,7 @@ public class BodyObject {
 	
 	public void InstantiateChild() {
 		var jointObj = Object.Instantiate(BodyPrefab, GameObject.transform, false);
-		jointObj.name = "ForceField";
+		jointObj.name = "Head";
 	} 
 
 	public bool IdMatches(ulong id) {

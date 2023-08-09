@@ -551,8 +551,8 @@ MonoBehaviour:
   ceilingSizeY: 2.8125
   minDistance: 1.53
   bodyManager: {fileID: 1513841936}
-  clusterPrefab: {fileID: 42177510066977988, guid: 7e6001dadc433ba42bfe909f24320979, type: 3}
-  bodyPrefab: {fileID: 42177510066977988, guid: f209841ea428e9447bfea564178052b7, type: 3}
+  clusterPrefab: {fileID: 9156562040263127675, guid: 02585c548af98b94c831441c0598fc1c, type: 3}
+  bodyPrefab: {fileID: 3580912418386630077, guid: d481ba3a24fe5ea4ca132c7137d16c9f, type: 3}
 --- !u!4 &659481538
 Transform:
   m_ObjectHideFlags: 0

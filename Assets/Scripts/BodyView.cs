@@ -49,7 +49,7 @@ public class BodyView : MonoBehaviour {
 
 			// delete untracked bodies
 			foreach (var trackingId in knownIds.Where(trackingId => !trackedIds.Contains(trackingId))) {
-				foreach (var body in _bodies.Where(body => body.IdMatches(trackingId))) {
+				foreach (var body in _bodies.ToList().Where(body => body.IdMatches(trackingId))) {
 					Destroy(body.GameObject);
 					_bodies.Remove(body);
 				}
