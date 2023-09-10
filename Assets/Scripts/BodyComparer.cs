@@ -27,20 +27,20 @@ public class BodyComparer : MonoBehaviour {
 			}
 
 			foreach (var body2 in bodies.Where(body2 => body1 != body2)) {
-				if (Vector3.Distance(body1.GameObject.transform.position, body2.GameObject.transform.position) <= minDistance) {
-					var existingCluster2 = closeGroups.FirstOrDefault(cluster => cluster.IsMember(body2.ID));
+				if (Vector3.Distance(body1.GameObject.transform.position, body2.GameObject.transform.position) >
+				    minDistance) continue;
 
-					if (existingCluster2 != null && currentCluster != existingCluster2) {
-						foreach (var member in existingCluster2.ClusterMembers) {
-							currentCluster.AddClusterMember(member);
-						}
-
-						closeGroups.Remove(existingCluster2);
+				var existingCluster2 = closeGroups.FirstOrDefault(cluster => cluster.IsMember(body2.ID));
+				if (existingCluster2 != null && currentCluster != existingCluster2) {
+					foreach (var member in existingCluster2.ClusterMembers) {
+						currentCluster.AddClusterMember(member);
 					}
 
-					if (!currentCluster.IsMember(body2.ID)) {
-						currentCluster.AddClusterMember(body2);
-					}
+					closeGroups.Remove(existingCluster2);
+				}
+
+				if (!currentCluster.IsMember(body2.ID)) {
+					currentCluster.AddClusterMember(body2);
 				}
 			}
 		}
