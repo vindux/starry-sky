@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.Kinect;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Video;
+using AudioSource = UnityEngine.AudioSource;
 using Joint = Windows.Kinect.Joint;
 using Random = UnityEngine.Random;
 
@@ -19,17 +18,15 @@ public class BodyView : MonoBehaviour {
 	private const float CamSizeX = 17.77568f;
 	private const float CamSizeY = 5.0f;
 	private TextMeshPro _textMeshPro;
-	private bool isVideoStarting = false;
-	private bool isVideoPlaying = false;
+	private BackgroundMusicManager _backgroundMusicManager;
+	private VideoManager _videoManager;
 
 	public BodyManager bodyManager;
 	public GameObject clusterPrefab;
 	public GameObject bodyPrefab;
+	public AudioSource backgroundMusic;
 	public VideoPlayer superNovaVideo;
-	public float videoFadeSpeed = 0.5f;
-	public int videoTimeoutSeconds = 10;
 
-	// private readonly Dictionary<ulong, GameObject> _bodies = new();
 	private readonly List<BodyObject> _bodies = new();
 
 	private readonly List<JointType> _joints = new() {
@@ -41,7 +38,8 @@ public class BodyView : MonoBehaviour {
 	private void Start() {
 		_isBodyManagerNull = bodyManager == null;
 		_textMeshPro = GetComponentInChildren<TextMeshPro>();
-		superNovaVideo.gameObject.SetActive(false);
+		_backgroundMusicManager = backgroundMusic.GetComponent<BackgroundMusicManager>();
+		_videoManager = superNovaVideo.GetComponent<VideoManager>();
 	}
 
 	private void Update() {
@@ -103,11 +101,9 @@ public class BodyView : MonoBehaviour {
 			var cluster = clusters[index];
 			var bodies = cluster.ClusterMembers;
 
-			if (bodies.Count >= 5 && !isVideoPlaying) {
+			if (bodies.Count >= 5 && !_videoManager.IsVideoPlaying) {
 				Debug.Log("Playing video");
-				StartCoroutine(PlaySuperNovaVideo());
-				
-				return;
+				StartCoroutine(_videoManager.PlaySuperNovaVideo(_backgroundMusicManager));
 			}
 
 			foreach (var body1 in bodies) {
@@ -119,91 +115,6 @@ public class BodyView : MonoBehaviour {
 			}
 		}
 	}
-
-	private IEnumerator PlaySuperNovaVideo() {
-		isVideoPlaying = true;
-		superNovaVideo.gameObject.SetActive(true);
-		// superNovaVideo.Play();
-
-		StartCoroutine(FadeVideoPlayerAlpha(superNovaVideo, FadeDirection.In, videoFadeSpeed));
-		yield return new WaitForSeconds(1);
-		yield return new WaitUntil(() => !superNovaVideo.isPlaying);
-
-		StartCoroutine(FadeVideoPlayerAlpha(superNovaVideo, FadeDirection.Out, videoFadeSpeed));
-		yield return new WaitForSeconds(videoTimeoutSeconds);
-		Debug.Log("Finished Super Nova video.");
-		
-		isVideoPlaying = false;
-	}
-
-	private IEnumerator FadeVideoPlayerAlpha(VideoPlayer video, FadeDirection direction, float speed) {
-		if (video.renderMode is not (VideoRenderMode.CameraNearPlane
-		    or VideoRenderMode.CameraFarPlane
-		    or VideoRenderMode.RenderTexture)) yield break;
-	
-		RawImage rawImage = null;
-		if (video.renderMode == VideoRenderMode.RenderTexture) {
-			video.gameObject.TryGetComponent(out rawImage);
-			if (!rawImage) {
-				Debug.LogWarning($"No RawImage on the VideoPlayer GameObject found. -> ({video.gameObject.name})");
-			}
-		}
-
-		var alpha = direction == FadeDirection.Out ? 1f : 0f;
-		var fadeEndValue = direction == FadeDirection.Out ? 0f : 1f;
-
-		if (direction == FadeDirection.Out) {
-			Debug.Log("Stop Video");
-			while (alpha >= fadeEndValue) {
-				alpha -= Time.deltaTime * speed;
-				if (rawImage) {
-					rawImage.color = new Color(rawImage.color.r, rawImage.color.g, rawImage.color.b, alpha);
-				}
-				else {
-					video.targetCameraAlpha = alpha;
-				}
-
-				yield return null;
-			}
-
-			video.Stop();
-			if (rawImage) rawImage.enabled = false;
-		}
-		else {
-			Debug.Log("Play Video");
-
-			//Make sure alpha is 0
-			if (rawImage) {
-				rawImage.color = new Color(rawImage.color.r, rawImage.color.g, rawImage.color.b, alpha);
-			}
-			else {
-				video.targetCameraAlpha = alpha;
-			}
-
-			//Enable the RawImage and start the player
-			if (rawImage) {
-				rawImage.enabled = true;
-			}
-
-			video.Play();
-
-			//Delay - to make sure the Image has the correct Texture
-			yield return new WaitForSeconds(0.1f);
-
-			while (alpha <= fadeEndValue) {
-				alpha += Time.deltaTime * speed;
-				if (rawImage) {
-					rawImage.color = new Color(rawImage.color.r, rawImage.color.g, rawImage.color.b, alpha);
-				}
-				else {
-					video.targetCameraAlpha = alpha;
-				}
-
-				yield return null;
-			}
-		}
-	}
-
 
 	private BodyObject CreateBodyObject(ulong id, float x = 0, float y = 0) {
 		var body = new GameObject("body=" + id) {
