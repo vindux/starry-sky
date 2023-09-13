@@ -17,7 +17,6 @@ public class BodyView : MonoBehaviour {
 
 	private const float CamSizeX = 17.77568f;
 	private const float CamSizeY = 5.0f;
-	private TextMeshPro _textMeshPro;
 	private BackgroundMusicManager _backgroundMusicManager;
 	private VideoManager _videoManager;
 
@@ -26,6 +25,8 @@ public class BodyView : MonoBehaviour {
 	public GameObject bodyPrefab;
 	public AudioSource backgroundMusic;
 	public VideoPlayer superNovaVideo;
+	public TextMeshPro textMeshPro;
+	public bool showTextMeshPro = true;
 
 	private readonly List<BodyObject> _bodies = new();
 
@@ -37,13 +38,18 @@ public class BodyView : MonoBehaviour {
 
 	private void Start() {
 		_isBodyManagerNull = bodyManager == null;
-		_textMeshPro = GetComponentInChildren<TextMeshPro>();
 		_backgroundMusicManager = backgroundMusic.GetComponent<BackgroundMusicManager>();
 		_videoManager = superNovaVideo.GetComponent<VideoManager>();
 	}
 
 	private void Update() {
 		if (_isBodyManagerNull) return;
+		if (showTextMeshPro && !textMeshPro.gameObject.activeSelf) {
+			textMeshPro.gameObject.SetActive(true);
+		}
+		else if (!showTextMeshPro && textMeshPro.gameObject.activeSelf) {
+			textMeshPro.gameObject.SetActive(false);
+		}
 
 		var data = bodyManager.GetData();
 		if (data == null) {
@@ -91,9 +97,9 @@ public class BodyView : MonoBehaviour {
 	private void VisualizeClusters() {
 		var clusters = BodyComparer.GetCloseGroups(_bodies, minDistance, clusterPrefab);
 		// Debug.Log("Cluster size = " + clusters.Count);
-		if (_textMeshPro != null) {
+		if (textMeshPro != null) {
 			var text = "\nBodies = " + _bodies.Count + "\nClusters = " + clusters.Count;
-			_textMeshPro.text = text;
+			textMeshPro.text = text;
 		}
 
 		for (var index = 0; index < clusters.Count; index++) {

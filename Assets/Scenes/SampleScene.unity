@@ -647,6 +647,8 @@ MonoBehaviour:
   bodyPrefab: {fileID: 42177510066977988, guid: f209841ea428e9447bfea564178052b7, type: 3}
   backgroundMusic: {fileID: 1431014065}
   superNovaVideo: {fileID: 625187442}
+  textMeshPro: {fileID: 1043014221}
+  showTextMeshPro: 1
 --- !u!4 &659481538
 Transform:
   m_ObjectHideFlags: 0
@@ -781,6 +783,22 @@ PrefabInstance:
     - target: {fileID: 6615684309902972216, guid: cc7e78eaba7c6474e8ed4828514c5a1a, type: 3}
       propertyPath: m_ConstrainProportionsScale
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6615684309902972222, guid: cc7e78eaba7c6474e8ed4828514c5a1a, type: 3}
+      propertyPath: RotationModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6615684309902972222, guid: cc7e78eaba7c6474e8ed4828514c5a1a, type: 3}
+      propertyPath: RotationModule.curve.scalar
+      value: 0.17453292
+      objectReference: {fileID: 0}
+    - target: {fileID: 6615684309902972222, guid: cc7e78eaba7c6474e8ed4828514c5a1a, type: 3}
+      propertyPath: RotationBySpeedModule.enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6615684309902972222, guid: cc7e78eaba7c6474e8ed4828514c5a1a, type: 3}
+      propertyPath: RotationBySpeedModule.curve.scalar
+      value: 0.034906585
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cc7e78eaba7c6474e8ed4828514c5a1a, type: 3}
