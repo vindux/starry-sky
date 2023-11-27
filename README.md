@@ -1,4 +1,4 @@
-# Starry Sky
+# Starry Sky ✨
 
 ## Features
 
