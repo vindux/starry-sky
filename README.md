@@ -1,5 +1,12 @@
 # Starry Sky ✨
 
+
+## Demonstation
+
+
+https://github.com/vindux/starry-sky/assets/51805041/03529b08-94b0-497d-9fa2-343d99e1f149
+
+
 ## Features
 
 Das Projekt umfasst die Erstellung einer Sternenhimmelanimation durch einen Projektor, wobei bewegliche Partikel als Sterne fungieren. Diese Partikel zeigen minimale Eigenbewegungen und folgen den Bewegungen im Raum durch Personentracking. Jeder Mensch wird durch einen kleinen Sternencluster repräsentiert.
