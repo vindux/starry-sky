@@ -27,7 +27,7 @@ Das Projekt umfasst die Erstellung einer Sternenhimmelanimation durch einen Proj
 - Kinect an der längeren Raumseite für umfassende Personenverfolgung.
 
 ### Software
-- Unity-Anwendung zur Verarbeitung der Tiefenmap, Sternenhimmelrendering und Projektorbildgenerierung.
+- Unity-Anwendung zur Verarbeitung der Tiefendaten, Sternenhimmelrendering und Projektorbildgenerierung.
 
 ### Kern der Anwendung
 - Partikelsystem in Unity repräsentiert den Sternenhimmel.
